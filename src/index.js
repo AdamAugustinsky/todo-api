@@ -56,16 +56,17 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 
   const id = uuidv4();
 
-  user.todos.push({
+  const newTodo = {
     id, // precisa ser um uuid
     title,
     done: false, 
     deadline: new Date(deadline), 
     created_at: new Date()
-  });
+  };
 
+  user.todos.push(newTodo);
 
-  return response.status(201).send();
+  return response.status(201).json(newTodo);
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
