@@ -23,18 +23,25 @@ function checksExistsUserAccount(request, response, next) {
 }
 
 app.post('/users', (request, response) => {
-  const { user, username } = request.body; 
+  const { name, username } = request.body; 
+
+  const usernameAlreadyInUse = users.find(user => user.username === username);
+
+  if(usernameAlreadyInUse)
+    return response.status(400).json({error: "username already in use"});
 
   const id = uuidv4();
 
-  users.push({
+  const newUser = {
     id,
-    user,
+    name,
     username,
     todos: []
-  });
+  };
 
-  return response.status(201).send();
+  users.push(newUser);
+
+  return response.status(201).json(newUser);
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
@@ -56,6 +63,7 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
     deadline: new Date(deadline), 
     created_at: new Date()
   });
+
 
   return response.status(201).send();
 });
