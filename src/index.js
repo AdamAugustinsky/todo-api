@@ -34,7 +34,6 @@ app.post('/users', (request, response) => {
     todos: []
   });
 
-  console.log(users);
   return response.status(201).send();
 });
 
@@ -45,7 +44,20 @@ app.get('/todos', checksExistsUserAccount, (request, response) => {
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { title, deadline } = request.body;
+  const { user } = request;
+
+  const id = uuidv4();
+
+  user.todos.push({
+    id, // precisa ser um uuid
+    title,
+    done: false, 
+    deadline: new Date(deadline), 
+    created_at: new Date()
+  });
+
+  return response.status(201).send();
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
